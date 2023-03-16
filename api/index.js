@@ -18,8 +18,8 @@ app.get("/api/mahasiswa", async (_req, res) => {
     res.send((await client.query("select * from mahasiswa")).rows[0]);
 })
 
-app.get("/api/mahasiswa/:nim", async (req, res) => {
-    res.send(cd (await client.query(`select * from mahasiswa where id = '${req.params.nim}' `)));
+app.get("/api/mahasiswa/:id", async (req, res) => {
+    res.send(cd(await client.query(`select * from mahasiswa where id = '${req.params.id}' `)));
 })
 
 
