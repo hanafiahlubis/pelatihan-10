@@ -14,9 +14,14 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static("public"));
 
-app.get("/api/mahasiswa" ,async (req, res) => {
-    res.send(await client.query("select * from mahasiswa"));
+app.get("/api/mahasiswa", async (_req, res) => {
+    res.send((await client.query("select * from mahasiswa")).rows[0]);
 })
 
-app.listen(3000);
+app.get("/api/mahasiswa/:nim", async (req, res) => {
+    res.send(cd (await client.query(`select * from mahasiswa where id = '${req.params.nim}' `)));
+})
 
+
+
+app.listen(3000);
