@@ -29,6 +29,10 @@ app.delete("/api/delete/mahasiswa", async (_req, res) => {
     await client.query(`delete from mahasiswa`);
     res.send("Berhasil Menghapus Data Mahasiswa semuanya");
 });
+app.delete("/api/delete/mahasiswa/:id", async (req, res) => {
+    await client.query(`delete from mahasiswa where id = ${req.params.id}`);
+    res.send("Berhasil Menghapus Data satu Mahasiswa");
+});
 
 
 
