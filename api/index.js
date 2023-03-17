@@ -18,7 +18,7 @@ app.use(express.static("public"));
 
 app.get("/api/mahasiswa", async (_req, res) => {
     res.send((await client.query("select * from mahasiswa")).rows[0]);
-})
+});
 
 app.get("/api/mahasiswa/:id", async (req, res) => {
     res.send(await client.query(`select * from mahasiswa where id = ${req.params.id}`));
@@ -39,6 +39,9 @@ app.delete("/api/delete/mahasiswa/:id", async (req, res) => {
 // ROUTE PELATIHAN
 app.get("/api/pelatihan", async (_req, res) => {
     res.send((await client.query("select * from pelatihan")).rows[0]);
-})
+});
+app.get("/api/pelatihan/:id", async (req, res) => {
+    res.send((await client.query(`select * from pelatihan where id = ${req.params.id}`)).rows[0]);
+});
 
 app.listen(3000);
