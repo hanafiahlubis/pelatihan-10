@@ -43,5 +43,9 @@ app.get("/api/pelatihan", async (_req, res) => {
 app.get("/api/pelatihan/:id", async (req, res) => {
     res.send((await client.query(`select * from pelatihan where id = ${req.params.id}`)).rows[0]);
 });
-
+app.post("/api/tambah/pelatihan", async (req, res) => {
+    console.log(req.body);
+    await client.query(`insert into pelatihan  values (DEFAULT,'${req.body.nama}')`)
+    res.send("Berhasil Menabah Data pelatihan");
+});
 app.listen(3000);
