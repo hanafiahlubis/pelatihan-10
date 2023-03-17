@@ -19,8 +19,12 @@ app.get("/api/mahasiswa", async (_req, res) => {
 })
 
 app.get("/api/mahasiswa/:id", async (req, res) => {
-    res.send(cd(await client.query(`select * from mahasiswa where id = '${req.params.id}' `)));
-})
+    res.send(await client.query(`select * from mahasiswa where id = ${req.params.id}`));
+});
+app.post("/api/tambah/mahasiswa", async (req, res) => {
+    await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur})`)
+    res.send("Berhasil Menabah Data");
+});
 
 
 
