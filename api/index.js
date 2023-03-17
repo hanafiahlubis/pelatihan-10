@@ -25,6 +25,10 @@ app.post("/api/tambah/mahasiswa", async (req, res) => {
     await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur})`)
     res.send("Berhasil Menabah Data");
 });
+app.delete("/api/delete/mahasiswa", async (_req, res) => {
+    await client.query(`delete from mahasiswa`);
+    res.send("Berhasil Menghapus Data Mahasiswa semuanya");
+});
 
 
 
