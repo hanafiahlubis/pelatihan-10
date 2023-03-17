@@ -14,6 +14,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static("public"));
 
+// root Mahasiswa
+
 app.get("/api/mahasiswa", async (_req, res) => {
     res.send((await client.query("select * from mahasiswa")).rows[0]);
 })
@@ -34,6 +36,9 @@ app.delete("/api/delete/mahasiswa/:id", async (req, res) => {
     res.send("Berhasil Menghapus Data satu Mahasiswa");
 });
 
-
+// ROUTE PELATIHAN
+app.get("/api/pelatihan", async (_req, res) => {
+    res.send((await client.query("select * from pelatihan")).rows[0]);
+})
 
 app.listen(3000);
