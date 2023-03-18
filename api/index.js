@@ -4,12 +4,13 @@ import express from "express";
 import { client } from "./db.js";
 import jwt from "jsonwebtoken";
 
+// percobaan 
+// const token = jwt.sign({
+//     masuk: "dsadasda"
+// }, "rahasia");
 
-const token = jwt.sign({
-    masuk: "dsadasda"
-}, "rahasia");
+// console.log(token);
 
-console.log(token);
 const app = express();
 
 app.use(express.json());
@@ -21,7 +22,7 @@ app.post("/api/token", async (req, res) => {
     // console.log(results.rows[0]);
     if (results.rows.length > 0) {
         if (results.rows[0].password === req.body.password) {
-            const token = jwt.sign(results.rows[0], "dsadasda"
+            const token = jwt.sign(results.rows[0], process.env.SECRET_KEY
             );
             res.send(token);
         } else {
