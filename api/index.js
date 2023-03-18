@@ -58,6 +58,12 @@ app.post("/api/tambah/mahasiswa", async (req, res) => {
     await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur})`)
     res.send("Berhasil Menabah Data");
 });
+
+app.put("/api/update/mahasiswa",async (req,res)=>{
+    await client.query(`update mahasiswa set nama =' ${req.body.nama}'`);
+    res.send("Berhasil mengganti nama");
+});
+
 app.delete("/api/delete/mahasiswa", async (_req, res) => {
     await client.query(`delete from mahasiswa`);
     res.send("Berhasil Menghapus Data Mahasiswa semuanya");
