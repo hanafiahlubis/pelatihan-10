@@ -1,5 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import { client } from "./db.js";
+import jwt from "jsonwebtoken";
+
+
+const token =  jwt.sign({
+    masuk: "dsadasda"
+}, "rahasia");
+
+console.log(token);
 const app = express();
 
 app.use((req, res, next) => {
