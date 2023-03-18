@@ -5,13 +5,34 @@ import { client } from "./db.js";
 import jwt from "jsonwebtoken";
 
 
-const token =  jwt.sign({
+const token = jwt.sign({
     masuk: "dsadasda"
 }, "rahasia");
 
 console.log(token);
 const app = express();
 
+app.use(express.json());
+
+// token dinamis
+app.post("/api/token", async (req, res) => {
+    // console.log(req.body);
+    const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
+    // console.log(results.rows[0]);
+    if (results.rows.length > 0) {
+        if (results.rows[0].password === req.body.password) {
+            const token = jwt.sign(results.rows[0], "dsadasda"
+            );
+            res.send(token);
+        } else {
+            res.status(401);
+            res.send("password salah");
+        }
+    } else {
+        res.status(401).send("Mahasiswa tidak di temukkan");
+    }
+});
+// token manual
 app.use((req, res, next) => {
     if (req.headers.authorization === "Bearer abcd") {
         next();
@@ -21,7 +42,6 @@ app.use((req, res, next) => {
     }
 });
 
-app.use(express.json());
 app.use(express.static("public"));
 
 // root Mahasiswa

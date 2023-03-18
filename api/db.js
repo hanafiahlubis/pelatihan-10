@@ -3,9 +3,9 @@ import pkg from "pg";
 const { Client } = pkg;
 
 export const client = new Client({
-    "host": "localhost",
+    "host": "db.gfyxmythpcokpikhlvpv.supabase.co",
     "user": "postgres",
-    "password": "123456789",
+    "password": "aliganteng123",
     "database": "postgres"
 });
 
