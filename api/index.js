@@ -19,7 +19,7 @@ app.use(express.json());
 app.post("/api/token", async (req, res) => {
     // console.log(req.body);
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
-    // console.log(results.rows[0]);
+    console.log(results.rows[0]);
     if (results.rows.length > 0) {
         if (results.rows[0].password === req.body.password) {
             const token = jwt.sign(results.rows[0], process.env.SECRET_KEY
@@ -30,7 +30,8 @@ app.post("/api/token", async (req, res) => {
             res.send("password salah");
         }
     } else {
-        res.status(401).send("Mahasiswa tidak di temukkan");
+        res.status(401);
+        res.send("Mahasiswa tidak di temukkan");
     }
 });
 // token manual
@@ -59,8 +60,8 @@ app.post("/api/tambah/mahasiswa", async (req, res) => {
     res.send("Berhasil Menabah Data");
 });
 
-app.put("/api/update/mahasiswa",async (req,res)=>{
-    await client.query(`update mahasiswa set nama =' ${req.body.nama}'`);
+app.put("/api/update/mahasiswa", async (req, res) => {
+    await client.query(`update mahasiswa set nama ='${req.body.nama}'`);
     res.send("Berhasil mengganti nama");
 });
 
@@ -87,8 +88,8 @@ app.post("/api/tambah/pelatihan", async (req, res) => {
     res.send("Berhasil Menabah Data pelatihan");
 });
 
-app.put("/api/update/pelatihan",async (req,res)=>{
-    await client.query(`update pelatihan set nama =' ${req.body.nama}'`);
+app.put("/api/update/pelatihan", async (req, res) => {
+    await client.query(`update pelatihan set nama ='${req.body.nama}'`);
     res.send("Berhasil mengganti nama");
 });
 
