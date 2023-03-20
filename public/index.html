@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>belajar</title>
-</head>
-<body>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <th>NIM</th>
+        <th>NAMA</th>
+      </thead>
+      <tbody></tbody>
+    </table>
     <script>
+      async function tampilMahasiswa() {
+        const res = await fetch("/api/mahasiswa");
+        const data = await res.json();
 
+        const tbody = document.querySelector("tbody");
+        data.forEach((e) => {
+          console.log(e);
+          const tr = document.createElement("tr");
+
+          const td = document.createElement("td");
+          td.textContent = e.nim;
+          tr.appendChild(td);
+
+          const td2 = document.createElement("td");
+          td2.textContent = e.nama;
+          tr.appendChild(td2);
+
+          tbody.appendChild(tr);
+        });
+      }
+      tampilMahasiswa();
     </script>
-</body>
+  </body>
 </html>

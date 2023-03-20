@@ -15,12 +15,15 @@ const app = express();
 
 app.use(express.json());
 // token dinamis
-app.post("/api/token", async (req, res) => {
+app.post("/api/login", async (req, res) => {
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
-    console.log(results.rows[0]);
+    // console.log(results.rows[0]);
     if (results.rows.length > 0) {
         if (results.rows[0].password === req.body.password) {
-            const token = jwt.sign(results.rows[0], process.env.SECRET_KEY);
+            const token = jwt.sign(
+                results.rows[0], 
+                process.env.SECRET_KEY
+            );
             res.send(token);
         } else {
             res.status(401);
@@ -33,12 +36,12 @@ app.post("/api/token", async (req, res) => {
 });
 // token manual
 app.use((req, res, next) => {
-    if (req.headers.authorization === "Bearer abcd") {
-        next();
-    } else {
-        res.status(401);
-        res.send("Token Salah");
-    }
+    // if (req.headers.authorization === "Bearer abcd") {
+    next();
+    // } else {
+    //     res.status(401);
+    //     res.send("Token Salah");
+    // }
 });
 
 app.use(express.static("public"));
@@ -46,7 +49,7 @@ app.use(express.static("public"));
 // root Mahasiswa
 
 app.get("/api/mahasiswa", async (_req, res) => {
-    res.send((await client.query("select * from mahasiswa")).rows[0]);
+    res.send((await client.query("select * from mahasiswa")).rows);
 });
 
 app.get("/api/mahasiswa/:id", async (req, res) => {
