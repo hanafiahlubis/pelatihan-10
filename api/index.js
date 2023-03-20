@@ -14,16 +14,13 @@ import jwt from "jsonwebtoken";
 const app = express();
 
 app.use(express.json());
-
 // token dinamis
 app.post("/api/token", async (req, res) => {
-    // console.log(req.body);
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
     console.log(results.rows[0]);
     if (results.rows.length > 0) {
         if (results.rows[0].password === req.body.password) {
-            const token = jwt.sign(results.rows[0], process.env.SECRET_KEY
-            );
+            const token = jwt.sign(results.rows[0], process.env.SECRET_KEY);
             res.send(token);
         } else {
             res.status(401);
