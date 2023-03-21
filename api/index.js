@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-import cookieParser from'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { client } from "./db.js";
 import jwt from "jsonwebtoken";
 
@@ -16,6 +16,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser())
+app.use(express.static("public"));
 // token dinamis
 app.post("/api/login", async (req, res) => {
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
@@ -23,9 +24,10 @@ app.post("/api/login", async (req, res) => {
     if (results.rows.length > 0) {
         if (results.rows[0].password === req.body.password) {
             const token = jwt.sign(
-                results.rows[0], 
+                results.rows[0],
                 process.env.SECRET_KEY
             );
+            res.cookie("token", token);
             res.send(token);
         } else {
             res.status(401);
@@ -38,17 +40,28 @@ app.post("/api/login", async (req, res) => {
 });
 // token manual
 app.use((req, res, next) => {
-    
-    if (req.headers.authorization === "Bearer abcd") {
-        // if(jwt.verify(req.headers))
-    next();
-    } else {
-        res.status(401);
-        res.send("Token Salah");
+    if(req.cookies.token){
+        try{
+            jwt.verify(token,process.env.SECRET_KEY);
+           next();
+        }catch(err){
+            res.status(200);
+            res.send("Anda Harus Login lagi");
+        }
+    }else{
+        res.status(200);
+        res.send("Anda Harus Login Terlebih Dahulu");
     }
+
+    //cara token manual
+    // if (req.headers.authorization === "Bearer abcd") {
+    //     next();
+    // } else {
+    //     res.status(401);
+    //     res.send("Token Salah");
+    // }
 });
 
-app.use(express.static("public"));
 
 // root Mahasiswa
 
