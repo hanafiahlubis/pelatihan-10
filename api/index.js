@@ -42,15 +42,15 @@ app.post("/api/login", async (req, res) => {
 
 // middlewere
 app.use((req, res, next) => {
-    if(req.cookies.token){
-        try{
-            jwt.verify(token,process.env.SECRET_KEY);
-           next();
-        }catch(err){
+    if (req.cookies.token) {
+        try {
+            jwt.verify(token, process.env.SECRET_KEY);
+            next();
+        } catch (err) {
             res.status(200);
             res.send("Anda Harus Login lagi");
         }
-    }else{
+    } else {
         res.status(200);
         res.send("Anda Harus Login Terlebih Dahulu");
     }
@@ -65,9 +65,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/api/me",(req,res)=>{
-    res.json(jwt.verify(req.cookies.token,process.env.SECRET_KEY));
-})
+app.get("/api/me", (req, res) => res.json(jwt.verify(req.cookies.token, process.env.SECRET_KEY)));
 
 
 // root Mahasiswa
