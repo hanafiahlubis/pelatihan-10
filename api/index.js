@@ -65,6 +65,9 @@ app.use((req, res, next) => {
 });
 
 
+app.get("/api/me",(req,res)=>{
+    res.json(jwt.verify(req.cookies.token,process.env.SECRET_KEY));
+})
 
 
 // root Mahasiswa
