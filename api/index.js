@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import cookieParser from'cookie-parser';
 import { client } from "./db.js";
 import jwt from "jsonwebtoken";
 
@@ -14,6 +15,7 @@ import jwt from "jsonwebtoken";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser())
 // token dinamis
 app.post("/api/login", async (req, res) => {
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
@@ -36,12 +38,14 @@ app.post("/api/login", async (req, res) => {
 });
 // token manual
 app.use((req, res, next) => {
-    // if (req.headers.authorization === "Bearer abcd") {
+    
+    if (req.headers.authorization === "Bearer abcd") {
+        // if(jwt.verify(req.headers))
     next();
-    // } else {
-    //     res.status(401);
-    //     res.send("Token Salah");
-    // }
+    } else {
+        res.status(401);
+        res.send("Token Salah");
+    }
 });
 
 app.use(express.static("public"));
