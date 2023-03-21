@@ -17,7 +17,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.static("public"));
-// token dinamis
+
+// dapatkan token / dinamis
 app.post("/api/login", async (req, res) => {
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
     // console.log(results.rows[0]);
@@ -38,7 +39,8 @@ app.post("/api/login", async (req, res) => {
         res.send("Mahasiswa tidak di temukkan");
     }
 });
-// token manual
+
+// middlewere
 app.use((req, res, next) => {
     if(req.cookies.token){
         try{
@@ -61,6 +63,8 @@ app.use((req, res, next) => {
     //     res.send("Token Salah");
     // }
 });
+
+
 
 
 // root Mahasiswa
