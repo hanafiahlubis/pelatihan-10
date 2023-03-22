@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from 'cookie-parser';
 import { client } from "./db.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 // percobaan 
 // const token = jwt.sign({
@@ -15,8 +16,28 @@ import jwt from "jsonwebtoken";
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.static("public"));
+
+app.use((req, res, next) => {
+    if (req.path.startsWith("/assets") || req.path.startsWith("/api")) {
+        next();
+    } else {
+        if (req.cookies.token) {
+            if (req.path.startsWith("/login")) {
+                res.redirect("/")
+            } else {
+                next();
+            }
+        } else {
+            if (req.path.startsWith("/login")) {
+                next();
+            } else {
+                res.redirect("/login");
+            }
+        }
+    }
+});
 
 // dapatkan token / dinamis
 app.post("/api/login", async (req, res) => {
@@ -44,7 +65,7 @@ app.post("/api/login", async (req, res) => {
 app.use((req, res, next) => {
     if (req.cookies.token) {
         try {
-            jwt.verify(token, process.env.SECRET_KEY);
+            jwt.verify(req.cookies.token, process.env.SECRET_KEY);
             next();
         } catch (err) {
             res.status(200);
@@ -65,20 +86,26 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/api/me", (req, res) => res.json(jwt.verify(req.cookies.token, process.env.SECRET_KEY)));
+app.get("/api/me", (req, res) => {
+    res.json(jwt.verify(req.cookies.token, process.env.SECRET_KEY))
+});
 
 
 // root Mahasiswa
 
 app.get("/api/mahasiswa", async (_req, res) => {
-    res.send((await client.query("select * from mahasiswa")).rows);
+    const data = await client.query("select * from mahasiswa");
+    res.send(data.rows);
 });
 
 app.get("/api/mahasiswa/:id", async (req, res) => {
     res.send(await client.query(`select * from mahasiswa where id = ${req.params.id}`));
 });
 app.post("/api/tambah/mahasiswa", async (req, res) => {
-    await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur})`)
+    const salt = await bcrypt.genSalt();
+    const hast = await bcrypt.hash(req.body.password, salt);
+    console.log(hast);
+    await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur},'${hast}')`)
     res.send("Berhasil Menabah Data");
 });
 
