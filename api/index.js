@@ -44,7 +44,7 @@ app.post("/api/login", async (req, res) => {
     const results = await client.query(`select * from mahasiswa where nim ='${req.body.nim}'`);
     // console.log(results.rows[0]);
     if (results.rows.length > 0) {
-        if (results.rows[0].password === req.body.password) {
+        if (await bcrypt.compare(req.body.password,results.rows[0].password)) {
             const token = jwt.sign(
                 results.rows[0],
                 process.env.SECRET_KEY
@@ -105,7 +105,7 @@ app.post("/api/tambah/mahasiswa", async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hast = await bcrypt.hash(req.body.password, salt);
     console.log(hast);
-    await client.query(`insert into mahasiswa values(${req.body.id} ,'${req.body.nama}',${req.body.umur},'${hast}')`)
+    await client.query(`insert into mahasiswa values(DEFAULT ,'${req.body.nim}','${req.body.nama}','${hast}')`)
     res.send("Berhasil Menabah Data");
 });
 
